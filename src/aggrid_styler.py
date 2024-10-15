@@ -27,26 +27,34 @@ def draw_grid(
         max_height: int = MAX_TABLE_HEIGHT,
         wrap_text: bool = False,
         auto_height: bool = False,
-        grid_options: dict = None,
+        #grid_options: dict = None,
         key=None,
         css: dict = None
 ):
 
+    # Initialize the dataframe
     gb = GridOptionsBuilder()
+    
+    # Configure default column settings
     gb.configure_default_column(
-        filterable=True,
-        groupable=False,
-        editable=False,
-        wrapText=wrap_text,
-        autoHeight=auto_height
+        enableFilter=True,
+        filter='agTextColumnFilter'
+        #filterable=True,
+        #groupable=True,
+        #editable=False,
+        #wrapText=wrap_text,
+        #autoHeight=auto_height
     )
 
-    if grid_options is not None:
-        gb.configure_grid_options(**grid_options)
 
+    # Configure dataframe options
+    gb.configure_grid_options(enableSorting=True, enableFilter=True)
+    
+    # Styling for columns
     for latin_name, (cyr_name, style_dict) in formatter.items():
         gb.configure_column(latin_name, header_name=cyr_name, **style_dict)
-
+    
+    # Configure how user selects rows
     gb.configure_selection(selection_mode=selection, use_checkbox=use_checkbox)
 
     return AgGrid(
@@ -60,3 +68,5 @@ def draw_grid(
         key=key,
         custom_css=css
     )
+
+

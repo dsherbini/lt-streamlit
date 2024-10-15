@@ -48,24 +48,33 @@ st.sidebar.markdown('Legislation Tracker')
 # reruns (e.g. if the user interacts with the widgets).
 @st.cache_data
 def load_data():
-    df = pd.read_csv("/Users/danyasherbini/Documents/GitHub/lt-streamlit/bills.csv")
-    df['origin_chamber_id'] = np.where(df['origin_chamber_id']==1,'Assembly','Senate')
-    return df
+    bills = pd.read_csv('/Users/danyasherbini/Documents/GitHub/lt-streamlit/data/bills.csv')
+    bills['chamber'] = np.where(bills['origin_chamber_id']==1,'Assembly','Senate')
+    bill_history = pd.read_csv('/Users/danyasherbini/Documents/GitHub/lt-streamlit/data/bill_history.csv')
+    bills = pd.merge(bills, bill_history, how='left', on= 'bill_id')
+    bills = bills.rename(columns={'history_trace':'bill_history','bill_date':'date_introduced'})
+    return bills
 
-df = load_data()
+bills = load_data()
 
 # Get only relevant columns
-keep_cols = ['bill_number','bill_name','author','coauthors','full_text','origin_chamber_id']
-bills = df[keep_cols]
+drop_cols = ['bill_id','openstates_bill_id', 'committee_id', 'origin_chamber_id']
+bills = bills.drop(drop_cols, axis=1)
+bills = bills.sort_values('bill_number', ascending=True) # sort by bill number by default
+
 
 # Get dataframes for AI bills, housing bills, and labor bills
 
 # AI bills
 ai_df = bills[bills['bill_name'].str.contains('artificial intelligence',na=False,case=False)]
+ai_df = ai_df.sort_values('bill_number', ascending=True) # sort by bill number by default
+
 
 # Housing bills
 housing_terms = ['housing','eviction','tenants','renters']
 housing_df = bills[bills['bill_name'].str.contains('|'.join(housing_terms), na=False, case=False)]
+housing_df = housing_df.sort_values('bill_number', ascending=True) # sort by bill number by default
+
 
 # Labor bills
 labor_terms = ['worker','labor','gig economy','contract workers']

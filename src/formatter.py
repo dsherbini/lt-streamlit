@@ -7,7 +7,6 @@ Created on Oct 3, 2024
 
 This script contains a dictionary of original column names, display column names, 
 and column widths that are used to format the Ag Grid data frames in the Streamlit
-app.
 """
 
 
