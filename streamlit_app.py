@@ -15,7 +15,6 @@ import numpy as np
 import streamlit as st
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, ColumnsAutoSizeMode
 from src import aggrid_styler
-from src.formatter import format_dict
 
 
 PATH = '/Users/danyasherbini/Documents/GitHub/lt-streamlit'
@@ -52,15 +51,21 @@ def load_data():
     bills['chamber'] = np.where(bills['origin_chamber_id']==1,'Assembly','Senate')
     bill_history = pd.read_csv('/Users/danyasherbini/Documents/GitHub/lt-streamlit/data/bill_history.csv')
     bills = pd.merge(bills, bill_history, how='left', on= 'bill_id')
-    bills = bills.rename(columns={'history_trace':'bill_history','bill_date':'date_introduced'})
+    bills = bills.rename(columns={'history_trace':'bill_history','bill_date':'date_introduced','bill_number':'bill_no'})
     return bills
 
 bills = load_data()
 
-# Get only relevant columns
-drop_cols = ['bill_id','openstates_bill_id', 'committee_id', 'origin_chamber_id']
+# Move bill_number column to first column
+numbers = bills['bill_no']
+bills.insert(0,'bill_number',numbers)
+
+# Drop some columns we don't need
+drop_cols = ['bill_no','bill_id','openstates_bill_id', 'committee_id', 'origin_chamber_id']
 bills = bills.drop(drop_cols, axis=1)
-bills = bills.sort_values('bill_number', ascending=True) # sort by bill number by default
+
+# Sort by bill number by default
+bills = bills.sort_values('bill_number', ascending=True) 
 
 
 # Get dataframes for AI bills, housing bills, and labor bills
@@ -155,8 +160,7 @@ with tab3:
     
     # Make the aggrid dataframe
     data = aggrid_styler.draw_grid(
-        housing_df,
-        formatter=format_dict)
+        housing_df)
 
     selected_rows = data.selected_rows
         
@@ -167,7 +171,7 @@ with tab3:
         name = selected_rows['bill_name'].iloc[0]
         author = selected_rows['author'].iloc[0]
         text = selected_rows['full_text'].iloc[0]
-        chamber = selected_rows['origin_chamber_id'].iloc[0]
+        chamber = selected_rows['chamber'].iloc[0]
         
         # Create first container for bill number and name
         with st.container(key='number_name'):
@@ -214,8 +218,7 @@ with tab4:
     
     # Make the aggrid dataframe
     data = aggrid_styler.draw_grid(
-        labor_df,
-        formatter=format_dict)
+        labor_df)
 
     selected_rows = data.selected_rows
         
@@ -228,7 +231,7 @@ with tab4:
             name = selected_rows['bill_name'].iloc[0]
             author = selected_rows['author'].iloc[0]
             text = selected_rows['full_text'].iloc[0]
-            chamber = selected_rows['origin_chamber_id'].iloc[0]
+            chamber = selected_rows['chamber'].iloc[0]
                 
             # Display in columns
             col1, col2, col3, col4, col5 = st.columns(5)
@@ -249,6 +252,21 @@ with tab4:
                 st.markdown("##### Bill Text")
                 st.markdown(text)
 
+#import pandas as pd
+    from io import BytesIO
+
+    def to_csv(df) -> bytes:
+        output = BytesIO()
+        df.to_csv(output, index=False)
+        output.seek(0)
+        return output.getvalue()
+
+    st.download_button(
+        "Download as CSV",
+        data=to_csv(data['data']),
+        file_name="output.csv",
+        mime="text/csv"
+        )
 
 
 

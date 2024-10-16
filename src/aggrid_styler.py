@@ -13,18 +13,16 @@ from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 
-# Set max height for all data tables
-MAX_TABLE_HEIGHT = 500
-
-# Data grid configuration
+# Ag grid function
 def draw_grid(
         df,
         formatter: dict = None,
         selection='single',
         use_checkbox=True,
+        #header_checkbox = True,
         fit_columns=False,
         theme='streamlit',
-        max_height: int = MAX_TABLE_HEIGHT,
+        max_height: int = 500,
         wrap_text: bool = False,
         auto_height: bool = False,
         #grid_options: dict = None,
@@ -32,41 +30,42 @@ def draw_grid(
         css: dict = None
 ):
 
-    # Initialize the dataframe
-    gb = GridOptionsBuilder()
+    # Initialize the GridOptionsBuilder from the dataframe passed into the function
+    builder = GridOptionsBuilder().from_dataframe(df)
     
-    # Configure default column settings
-    gb.configure_default_column(
+    # Configure default column settings for all columns
+    builder.configure_default_column(
         enableFilter=True,
-        filter='agTextColumnFilter'
-        #filterable=True,
-        #groupable=True,
-        #editable=False,
-        #wrapText=wrap_text,
-        #autoHeight=auto_height
-    )
-
-
-    # Configure dataframe options
-    gb.configure_grid_options(enableSorting=True, enableFilter=True)
+        filter='agTextColumnFilter',
+        # floating filter: adds a row under the header row for the filter
+        floatingFilter=True,
+        #columnSize='sizeToFit'
+        )
     
-    # Styling for columns
-    for latin_name, (cyr_name, style_dict) in formatter.items():
-        gb.configure_column(latin_name, header_name=cyr_name, **style_dict)
+    # Configure special settings for certain columns (batch)
+    builder.configure_columns(['full_text','leginfo_link','coauthors','bill_history','leg_session'],hide=True)
+    
+    # Configure special settings for individual columns 
+    builder.configure_column('bill_number',pinned='left') 
+    builder.configure_column('date_introduced',filter='agDateColumnFilter')
+    builder.configure_column('chamber',filter='agSetColumnFilter')
     
     # Configure how user selects rows
-    gb.configure_selection(selection_mode=selection, use_checkbox=use_checkbox)
+    builder.configure_selection(selection_mode=selection, use_checkbox=use_checkbox)
+    
+    # Build the grid options dictionary
+    grid_options = builder.build()
 
     return AgGrid(
         df,
-        gridOptions=gb.build(),
+        # pass the grid options dictionary built above
+        gridOptions=grid_options,
+        # ensures the df is updated dynamically
         update_mode=GridUpdateMode.SELECTION_CHANGED | GridUpdateMode.VALUE_CHANGED,
         allow_unsafe_jscode=True,
         fit_columns_on_grid_load=fit_columns,
-        height=max_height,
+        max_height=max_height,
         theme=theme,
         key=key,
-        custom_css=css
+        css=css
     )
-
-
