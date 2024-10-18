@@ -28,7 +28,7 @@ st.title('Bills')
 st.write(
     """
     This page shows California bills for the 2023-2024 legislative session. 
-    Please note that the All Bills page may take a few moments to load.
+    Please note that the page may take a few moments to load.
     """
 )
 

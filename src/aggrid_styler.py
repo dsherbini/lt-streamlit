@@ -7,6 +7,7 @@ Created on Oct 3, 2024
 
 This script contains settings for interactive Ag Grid data frames on Streamlit, 
 which are clickable/editable data tables.
+
 """
 
 from st_aggrid import AgGrid

@@ -8,12 +8,7 @@ Created on Oct 15, 2024
 Custom functions for Legislation Tracker streamlit app
 
 """
-import os
-import pandas as pd
-import numpy as np
 import streamlit as st
-from src import aggrid_styler
-
 
 ###############################################################################
 
@@ -21,7 +16,7 @@ import ast
 
 def ensure_set(x):
     '''
-    Function to ensure each element is a set (convert if it's a string representing a set).
+    Converts a string to a set.
     Needed to reformat the bill history column in the bills data set.
     '''
     if isinstance(x, str):
