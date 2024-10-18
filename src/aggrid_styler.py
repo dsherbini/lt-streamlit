@@ -13,8 +13,8 @@ from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 
-# Ag grid function
-def draw_grid(
+# Ag grid styler function for bills table
+def draw_bill_grid(
         df,
         formatter: dict = None,
         selection='single',
@@ -25,7 +25,6 @@ def draw_grid(
         max_height: int = 500,
         wrap_text: bool = False,
         auto_height: bool = False,
-        #grid_options: dict = None,
         key=None,
         css: dict = None
 ):
@@ -69,3 +68,62 @@ def draw_grid(
         key=key,
         css=css
     )
+
+
+# Ag grid styler function for legislators table
+def draw_leg_grid(
+        df,
+        formatter: dict = None,
+        #selection='single', -- selection turned off for legislators
+        #use_checkbox=True,
+        #header_checkbox = True,
+        fit_columns=False,
+        theme='streamlit',
+        max_height: int = 500,
+        wrap_text: bool = False,
+        auto_height: bool = False,
+        key=None,
+        css: dict = None
+):
+
+    # Initialize the GridOptionsBuilder from the dataframe passed into the function
+    builder = GridOptionsBuilder().from_dataframe(df)
+    
+    # Configure default column settings for all columns
+    builder.configure_default_column(
+        enableFilter=True,
+        filter='agTextColumnFilter',
+        # floating filter: adds a row under the header row for the filter
+        floatingFilter=True,
+        columnSize='sizeToFit'
+        )
+    
+    # Configure special settings for certain columns (batch)
+    builder.configure_columns(['legislator_id'],hide=True)
+    
+    # Configure special settings for individual columns 
+    builder.configure_column('name',pinned='left',filter='agSetColumnFilter') 
+    builder.configure_column('district',filter='agNumberColumnFilter')
+    builder.configure_column('party',filter='agSetColumnFilter')
+    builder.configure_column('chamber',filter='agSetColumnFilter')
+    
+    # Configure how user selects rows -- turned off for legislators
+    #builder.configure_selection(selection_mode=selection, use_checkbox=use_checkbox)
+    
+    # Build the grid options dictionary
+    grid_options = builder.build()
+
+    return AgGrid(
+        df,
+        # pass the grid options dictionary built above
+        gridOptions=grid_options,
+        # ensures the df is updated dynamically
+        update_mode=GridUpdateMode.SELECTION_CHANGED | GridUpdateMode.VALUE_CHANGED,
+        allow_unsafe_jscode=True,
+        fit_columns_on_grid_load=fit_columns,
+        max_height=max_height,
+        theme=theme,
+        key=key,
+        css=css
+    )
+
