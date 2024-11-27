@@ -14,9 +14,10 @@ import streamlit as st
 # Pages
 bills = st.Page('bills.py', title='Bills', icon='📝')
 legislators = st.Page('legislators.py', title='Legislators', icon='💼')
+calendar = st.Page('calendar.py', title='Calendar', icon='📅')
 
 # Build navigation bar
-pg = st.navigation([bills,legislators])
+pg = st.navigation([bills,legislators,calendar])
 st.set_page_config(page_title='Legislation Tracker', layout='wide')
 
 # Add logo
