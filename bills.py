@@ -26,10 +26,10 @@ os.getcwd()
 #st.set_page_config(page_title='Legislation Tracker', layout='wide') #can add page_icon argument
 st.title('Bills')
 st.write(
-    """
+    '''
     This page shows California bills for the 2023-2024 legislative session. 
     Please note that the page may take a few moments to load.
-    """
+    '''
 )
 
 ############################ LOAD AND SET UP DATA #############################
@@ -88,9 +88,14 @@ labor_df = labor_df.sort_values('bill_number', ascending=True) # sort by bill nu
 tab1, tab2, tab3 , tab4 = st.tabs(['All Bills', 'AI', 'Housing', 'Labor'])
 
 
+# Initialize session state for selected bills
+if 'selected_bills' not in st.session_state:
+    st.session_state.selected_bills = []
+
+
 ############################### TAB 1: All Bills ###############################
 with tab1:
-   st.header("All Bills")
+   st.header('All Bills')
    
    # Make the aggrid dataframe
    data = aggrid_styler.draw_bill_grid(bills)
@@ -105,15 +110,15 @@ with tab1:
            
    # Button to download data as csv file       
    st.download_button(key='all_bills_download',
-                      label="Download Full Data as CSV",
+                      label='Download Full Data as CSV',
                       data=to_csv(data['data']),
-                      file_name="output.csv",
-                      mime="text/csv"
+                      file_name='output.csv',
+                      mime='text/csv'
                       )
 
 ############################### TAB 2: AI Bills ###############################
 with tab2: 
-    st.header("AI Bills")
+    st.header('AI Bills')
 
     # Make the aggrid dataframe
     data = aggrid_styler.draw_bill_grid(
@@ -129,10 +134,10 @@ with tab2:
 
     # Button to download data as csv file       
     st.download_button(key='ai_download',
-                       label="Download Full Data as CSV",
+                       label='Download Full Data as CSV',
                        data=to_csv(data['data']),
-                       file_name="output.csv",
-                       mime="text/csv"
+                       file_name='output.csv',
+                       mime='text/csv'
                        )
         
         
@@ -140,7 +145,7 @@ with tab2:
 
 with tab3:
     # Title the page
-    st.header("Housing Bills")
+    st.header('Housing Bills')
     
     # Make the aggrid dataframe
     data = aggrid_styler.draw_bill_grid(
@@ -156,10 +161,10 @@ with tab3:
 
     # Button to download data as csv file       
     st.download_button(key='housing_download',
-                       label="Download Full Data as CSV",
+                       label='Download Full Data as CSV',
                        data=to_csv(data['data']),
-                       file_name="output.csv",
-                       mime="text/csv"
+                       file_name='output.csv',
+                       mime='text/csv'
                        )
         
     
@@ -167,7 +172,7 @@ with tab3:
 
 with tab4: 
     # Title the page
-    st.header("Labor Bills")
+    st.header('Labor Bills')
     
     # Make the aggrid dataframe
     data = aggrid_styler.draw_bill_grid(
@@ -183,10 +188,10 @@ with tab4:
    
     # Button to download data as csv file          
     st.download_button(key='labor_download',
-                       label="Download Full Data as CSV",
+                       label='Download Full Data as CSV',
                        data=to_csv(data['data']),
-                       file_name="output.csv",
-                       mime="text/csv"
+                       file_name='output.csv',
+                       mime='text/csv'
                        )
 
 

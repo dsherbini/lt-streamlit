@@ -22,11 +22,11 @@ os.getcwd()
 
 # Show the page title and description
 #st.set_page_config(page_title='Legislation Tracker', layout='wide') #can add page_icon argument
-st.title('Calendar - Option 2')
+st.title('Calendar')
 st.write(
-    """
-    This page shows important deadlines and/or events in the legislative cycle. 
-    """
+    '''
+    This page shows important events and deadlines in the 2025-2026 legislative cycle.
+    '''
 )
 
 ############################ LOAD AND SET UP DATA #############################
@@ -43,10 +43,10 @@ assembly_data = load_calendar_data()
 # convert from csv to json format
 calendar_events = [
     {
-        "title": row["title"],
-        "start": row["start"],
-        "end": row["end"],
-        "allDay": "true" if row["allDay"] else "false",
+        'title': row['title'],
+        'start': row['start'],
+        'end': row['end'],
+        'allDay': 'true' if row['allDay'] else 'false',
     }
     for _, row in assembly_data.iterrows()
 ]

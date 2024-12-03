@@ -26,9 +26,9 @@ os.getcwd()
 #st.set_page_config(page_title='Legislation Tracker', layout='wide') #can add page_icon argument
 st.title('Legislators')
 st.write(
-    """
+    '''
     This page shows California legislators for the 2023-2024 legislative session. 
-    """
+    '''
 )
 
 ############################ LOAD AND SET UP DATA #############################
@@ -50,9 +50,9 @@ data = aggrid_styler.draw_leg_grid(legislators)
 
 # Button to download data as csv file       
 st.download_button(key='legislators_download',
-                   label="Download Full Data as CSV",
+                   label='Download Full Data as CSV',
                    data=to_csv(data['data']),
-                   file_name="output.csv",
-                   mime="text/csv"
+                   file_name='output.csv',
+                   mime='text/csv'
                    )
 
