@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Bills Page
+Bills Page: Tabs
 Created on Oct 2, 2024
 @author: danyasherbini
 
-This page of the app contains bill information.
+This page displays bill info, segementing bills by topic using a tab display.
 """
 
 import os
