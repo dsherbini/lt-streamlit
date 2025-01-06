@@ -20,7 +20,7 @@ def draw_bill_grid(
         formatter: dict = None,
         selection='single',
         use_checkbox=True,
-        #header_checkbox = True,
+        #header_checkbox = True, -- turned off for now
         fit_columns=False, # change to true to make all columns the same width/fit to the table width
         theme='streamlit',
         max_height: int = 1500,
@@ -37,8 +37,7 @@ def draw_bill_grid(
     builder.configure_default_column(
         enableFilter=True,
         filter='agTextColumnFilter',
-        # floating filter: adds a row under the header row for the filter
-        floatingFilter=True,
+        floatingFilter=True, # floating filter: adds a row under the header row for the filter
         #columnSize='sizeToFit'
         )
     
@@ -46,7 +45,7 @@ def draw_bill_grid(
     builder.configure_columns(['full_text','leginfo_link','coauthors','bill_history','leg_session'],hide=True) # hide these columns in the initial dataframe
     
     # Configure special settings for individual columns
-    #builder.configure_column('checkbox', headerName='', checkboxSelection=True, width=50, pinned='left') #adding a checkbox column
+    #builder.configure_column('checkbox', headerName='', checkboxSelection=True, width=50, pinned='left') # option to add a specific checkbox column
     builder.configure_column('bill_number',headerName = 'Bill Number',pinned='left', checkboxSelection=True) # pin this column, make it the checkbox column
     builder.configure_column('bill_name',headerName = 'Bill Name')
     builder.configure_column('author',headerName = 'Author')
@@ -62,10 +61,8 @@ def draw_bill_grid(
 
     return AgGrid(
         df,
-        # pass the grid options dictionary built above
-        gridOptions=grid_options,
-        # ensures the df is updated dynamically
-        update_mode=GridUpdateMode.SELECTION_CHANGED | GridUpdateMode.VALUE_CHANGED,
+        gridOptions=grid_options, # pass the grid options dictionary built above
+        update_mode=GridUpdateMode.SELECTION_CHANGED | GridUpdateMode.VALUE_CHANGED, # ensures the df is updated dynamically
         allow_unsafe_jscode=True,
         fit_columns_on_grid_load=fit_columns,
         max_height=max_height,
@@ -79,10 +76,10 @@ def draw_bill_grid(
 def draw_leg_grid(
         df,
         formatter: dict = None,
-        #selection='single', -- selection turned off for legislators
-        #use_checkbox=True,
-        #header_checkbox = True,
-        fit_columns=True,
+        #selection='single', -- selection turned off for legislators table
+        #use_checkbox=True, -- turned off for legislators table
+        #header_checkbox = True, -- turned off for legislators table
+        fit_columns=True, # change to false to make all column width based on the variable
         theme='streamlit',
         max_height: int = 500,
         wrap_text: bool = False,
@@ -98,8 +95,7 @@ def draw_leg_grid(
     builder.configure_default_column(
         enableFilter=True,
         filter='agTextColumnFilter',
-        # floating filter: adds a row under the header row for the filter
-        floatingFilter=True,
+        floatingFilter=True, # floating filter: adds a row under the header row for the filter
         columnSize='sizeToFit'
         )
     
@@ -107,12 +103,12 @@ def draw_leg_grid(
     builder.configure_columns(['legislator_id'],hide=True)
     
     # Configure special settings for individual columns 
-    builder.configure_column('name',pinned='left',filter='agSetColumnFilter') 
-    builder.configure_column('district',filter='agNumberColumnFilter')
-    builder.configure_column('party',filter='agSetColumnFilter')
-    builder.configure_column('chamber',filter='agSetColumnFilter')
+    builder.configure_column('name',pinned='left',headerName = 'Name', filter='agSetColumnFilter') 
+    builder.configure_column('district',headerName = 'District',filter='agNumberColumnFilter', headerClass='left-align-header') # left align to make sure column header is justified left like the rest of the columns
+    builder.configure_column('party',headerName = 'Party',filter='agSetColumnFilter')
+    builder.configure_column('chamber',headerName = 'Chamber',filter='agSetColumnFilter')
     
-    # Configure how user selects rows -- turned off for legislators
+    # Configure how user selects rows -- turned off for legislators table
     #builder.configure_selection(selection_mode=selection, use_checkbox=use_checkbox)
     
     # Build the grid options dictionary
@@ -120,10 +116,8 @@ def draw_leg_grid(
 
     return AgGrid(
         df,
-        # pass the grid options dictionary built above
-        gridOptions=grid_options,
-        # ensures the df is updated dynamically
-        update_mode=GridUpdateMode.SELECTION_CHANGED | GridUpdateMode.VALUE_CHANGED,
+        gridOptions=grid_options, # pass the grid options dictionary built above
+        update_mode=GridUpdateMode.SELECTION_CHANGED | GridUpdateMode.VALUE_CHANGED, # ensures the df is updated dynamically
         allow_unsafe_jscode=True,
         fit_columns_on_grid_load=fit_columns,
         max_height=max_height,

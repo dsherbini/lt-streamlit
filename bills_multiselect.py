@@ -64,18 +64,18 @@ labor_df = bills[bills['bill_name'].str.contains('|'.join(labor_terms), na=False
 
 # Create a dictionary for category mapping
 category_mapping = {
-    "All Bills": bills,
-    "AI": ai_df,
-    "Housing": housing_df,
-    "Labor": labor_df
+    'All Bills': bills,
+    'AI': ai_df,
+    'Housing': housing_df,
+    'Labor': labor_df
 }
 
 ############################### MULTISELECT FILTER ###############################
 # Multiselect widget for bill categories
 selected_categories = st.multiselect(
-    "Select a category:",
+    'Select a category:',
     options=list(category_mapping.keys()),
-    default=["All Bills"]
+    default=['All Bills']
 )
 
 # Combine selected dataframes
@@ -92,10 +92,10 @@ if selected_categories:
     with col2:
         # Display the download button in the right column
         st.download_button(
-            label="Download Data as CSV",
+            label='Download Data as CSV',
             data=to_csv(combined_df),
-            file_name="selected_bills.csv",
-            mime="text/csv",
+            file_name='selected_bills.csv',
+            mime='text/csv',
             use_container_width=True
         )
     
@@ -110,5 +110,5 @@ if selected_categories:
         display_bill_info(selected_rows)
 
 else:
-    st.write("Please select at least one category to display bills.")
+    st.write('Please select at least one category to display bills.')
 

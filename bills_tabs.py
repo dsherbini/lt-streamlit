@@ -100,7 +100,7 @@ with tab1:
     col1, col2 = st.columns([4, 1])  # Adjust column widths as needed
 
     with col1:
-        st.header("All Bills")  # Header remains on the left
+        st.header('All Bills')  # Header remains on the left
 
     with col2:
         # Place the download button in the right column so it appears in the upper right hand corner of the page
