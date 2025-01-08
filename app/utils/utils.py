@@ -113,6 +113,7 @@ def display_bill_info(selected_rows):
     link = selected_rows['leginfo_link'].iloc[0]
     text = selected_rows['full_text'].iloc[0]
     history = selected_rows['bill_history'].iloc[0]
+    
     # Initialize 'selected_bills' if it doesn't exist
     #if 'selected_bills' not in st.session_state:
        #st.session_state.selected_bills = []
