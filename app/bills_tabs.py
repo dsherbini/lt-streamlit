@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Bills Page
+Bills Page: Tabs
 Created on Oct 2, 2024
 @author: danyasherbini
 
-This page of the app contains bill information.
+This page displays bill info, segementing bills by topic using a tab display.
 """
 
 import os
 import pandas as pd
 import numpy as np
 import streamlit as st
-from src import aggrid_styler
-from src.utils import display_bill_info, to_csv, format_bill_history, ensure_set
-
-
+from utils import aggrid_styler
+from utils.utils import display_bill_info, to_csv, format_bill_history, ensure_set
+from utils.session_manager import initialize_session_state
 
 PATH = '/Users/danyasherbini/Documents/GitHub/lt-streamlit'
 os.chdir(PATH)
@@ -90,9 +89,7 @@ tab1, tab2, tab3 , tab4 = st.tabs(['All Bills', 'AI', 'Housing', 'Labor'])
 
 
 # Initialize session state for selected bills
-if 'selected_bills' not in st.session_state:
-    st.session_state.selected_bills = []
-
+initialize_session_state()
 
 ############################### TAB 1: All Bills ###############################
 with tab1:
@@ -100,7 +97,7 @@ with tab1:
     col1, col2 = st.columns([4, 1])  # Adjust column widths as needed
 
     with col1:
-        st.header("All Bills")  # Header remains on the left
+        st.header('All Bills')  # Header remains on the left
 
     with col2:
         # Place the download button in the right column so it appears in the upper right hand corner of the page

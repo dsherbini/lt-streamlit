@@ -12,8 +12,9 @@ import os
 import pandas as pd
 import numpy as np
 import streamlit as st
-from src import aggrid_styler
-from src.utils import display_bill_info, to_csv, format_bill_history, ensure_set
+from utils import aggrid_styler
+from utils.utils import display_bill_info, to_csv, format_bill_history, ensure_set
+from utils.session_manager import initialize_session_state
 
 # Set working directory
 PATH = '/Users/danyasherbini/Documents/GitHub/lt-streamlit'
@@ -64,18 +65,22 @@ labor_df = bills[bills['bill_name'].str.contains('|'.join(labor_terms), na=False
 
 # Create a dictionary for category mapping
 category_mapping = {
-    "All Bills": bills,
-    "AI": ai_df,
-    "Housing": housing_df,
-    "Labor": labor_df
+    'All Bills': bills,
+    'AI': ai_df,
+    'Housing': housing_df,
+    'Labor': labor_df
 }
+
+
+# Initialize session state for selected bills
+initialize_session_state()
 
 ############################### MULTISELECT FILTER ###############################
 # Multiselect widget for bill categories
 selected_categories = st.multiselect(
-    "Select a category:",
+    'Select a category:',
     options=list(category_mapping.keys()),
-    default=["All Bills"]
+    default=['All Bills']
 )
 
 # Combine selected dataframes
@@ -87,15 +92,15 @@ if selected_categories:
 
     with col1:
         # Header for the selected categories
-        st.header(f"Displaying: {', '.join(selected_categories)}")
+        st.markdown(f"### Displaying: {', '.join(selected_categories)}")
 
     with col2:
         # Display the download button in the right column
         st.download_button(
-            label="Download Data as CSV",
+            label='Download Data as CSV',
             data=to_csv(combined_df),
-            file_name="selected_bills.csv",
-            mime="text/csv",
+            file_name='selected_bills.csv',
+            mime='text/csv',
             use_container_width=True
         )
     
@@ -110,5 +115,5 @@ if selected_categories:
         display_bill_info(selected_rows)
 
 else:
-    st.write("Please select at least one category to display bills.")
+    st.write('Please select at least one category to display bills.')
 

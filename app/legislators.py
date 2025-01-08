@@ -12,8 +12,8 @@ import os
 import pandas as pd
 import numpy as np
 import streamlit as st
-from src import aggrid_styler
-from src.utils import to_csv
+from utils import aggrid_styler
+from utils.utils import to_csv
 
 
 
